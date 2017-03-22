@@ -1,0 +1,44 @@
+vuelta 1
+
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# HEAD detached at 6d9b969
+# Changes to be committed:
+#	new file:   LICENSE
+#	modified:   app/AppKernel.php
+#	modified:   app/Resources/views/base.html.twig
+#	modified:   app/Resources/views/layout.html.twig
+#	modified:   app/Resources/views/menu.html.twig
+#	modified:   app/config/config.yml
+#	modified:   app/config/parameters.yml.dist
+#	new file:   asignaciones
+#	modified:   composer.json
+#	modified:   composer.lock
+#	new file:   facebook-ios-sdk
+#	modified:   src/UserBundle/Controller/UserController.php
+#	new file:   src/UserBundle/Downloads.lnk
+#	modified:   src/UserBundle/Entity/User.php
+#	deleted:    src/UserBundle/Entity/User.php~
+#	modified:   src/UserBundle/Form/UserType.php
+#	modified:   src/UserBundle/Resources/config/routing.yml
+#	new file:   src/UserBundle/Resources/public/js/delete-user.js
+#	modified:   src/UserBundle/Resources/translations/messages.es.xlf
+#	modified:   src/UserBundle/Resources/views/User/add.html.twig
+#	new file:   src/UserBundle/Resources/views/User/edit.html.twig
+#	new file:   src/UserBundle/Resources/views/User/forms/form.html.twig
+#	modified:   src/UserBundle/Resources/views/User/index.html.twig
+#	new file:   src/UserBundle/Resources/views/User/messages/danger.html.twig
+#	new file:   src/UserBundle/Resources/views/User/messages/success.html.twig
+#	new file:   src/UserBundle/Resources/views/User/view.html.twig
+#	modified:   web/config.php
+#	new file:   web/css/bootstrap.min.css.map
+#	modified:   web/css/style.css
+#	new file:   web/js/bootbox.min.js
+#
+hola
+
+clear
+exit
+
