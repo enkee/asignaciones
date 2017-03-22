@@ -19,6 +19,11 @@ user_edit:
     path:     /user/edit/{id}
     defaults: { _controller: UserBundle:User:edit }
 
+user_update:
+    path:     /user/update/{id}
+    defaults: { _controller: UserBundle:User:update }
+    methods: [POST, PUT]
+
 user_view:
     path:     /user/view/{id}
     defaults: { _controller: UserBundle:User:view }
@@ -32,6 +37,13 @@ user_redirect_add:
     defaults: 
         _controller: UserBundle:User:add
         path:     /user/add
+        permanent:  true
+        
+user_redirect_edit:
+    path:     /user/update/{id}
+    defaults: 
+        _controller: UserBundle:User:edit
+        path:     /user/edit/{id}
         permanent:  true
     
     
