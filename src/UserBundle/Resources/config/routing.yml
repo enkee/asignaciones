@@ -31,6 +31,7 @@ user_view:
 user_delete:
     path:     /user/delete/{id}
     defaults: { _controller: UserBundle:User:delete }
+    methods: [POST, DELETE]
     
 user_redirect_add:
     path:     /user/create

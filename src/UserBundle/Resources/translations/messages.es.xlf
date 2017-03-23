@@ -130,6 +130,26 @@
                 <source>User updated.</source>
                 <target>Usuario Actualizado.</target>
             </trans-unit>
+            <trans-unit id="33">
+                <source>Disabled</source>
+                <target>Deshabilitado</target>
+            </trans-unit>
+            <trans-unit id="34">
+                <source>Enabled</source>
+                <target>Habilitado</target>
+            </trans-unit>
+            <trans-unit id="35">
+                <source>Delete user</source>
+                <target>Eliminar Usuario</target>
+            </trans-unit>
+            <trans-unit id="36">
+                <source>User deleted.</source>
+                <target>Usuario Eliminado.</target>
+            </trans-unit>
+            <trans-unit id="37">
+                <source>Are you sure ?</source>
+                <target>Esta seguro ?</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

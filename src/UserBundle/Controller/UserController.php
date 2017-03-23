@@ -201,9 +201,54 @@ class UserController extends Controller
     
     public function viewAction($id)
     {
+        //Carga el driver y selecciona el registro para su vista.
         $repository = $this -> getDoctrine() -> getRepository('UserBundle:User');
         $user =$repository ->find($id);
+        //Manejando la excepcion de no encontrar el Id
+        if(!$user)
+        {
+        //Cargar el traductor (debe estar in a refactor function)
+            $messageException = $this->get('translator')->trans('User not found.'); 
+            throw $this->createNotFoundException($messageException);
+        }
+        //Crea un formulario de eliminacion
+        $deleteForm = $this->createDeleteForm($user);
+        //Visualiza la vista view y el formulario de eliminacion
+        return $this->render('UserBundle:User:view.html.twig', array('user' => $user, 'delete_form' => $deleteForm->createView()));
+    }
+    
+    private function createDeleteForm($user)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('user_delete', array('id' => $user->getid())))
+            ->setMethod('DELETE')
+            ->getForm();
+    }
+    
+    public function deleteAction(Request $request, $id)
+    {
+        $em = $this-> getDoctrine()->getManager();
+        $user = $em->getRepository('UserBundle:User')->find($id);
         
-        return new Response('Usuario: ' . $user ->getUsername() . ' con email: ' . $user ->getEmail());
+        if(!$user)
+        {
+        //Cargar el traductor (debe estar in a refactor function)
+            $messageException = $this->get('translator')->trans('User not found.'); 
+            throw $this->createNotFoundException($messageException);
+        }
+        
+        $form = $this->createDeleteForm($user);
+        $form -> handleRequest($request);
+        //Validamos el envio del formulario
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $em -> remove($user);
+            $em -> flush();
+        //Envia mensaje   
+            $successMessage = $this->get('translator')->trans('User deleted.');
+            $this->addFlash('mensaje', $successMessage);
+        //redigir a la vista index mostrando el usuario ya eliminado.
+            return $this->redirectToRoute('user_index'); 
+        }
     }
 }
