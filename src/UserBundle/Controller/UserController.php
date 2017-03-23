@@ -34,9 +34,10 @@ class UserController extends Controller
             $users, $request->query->getInt('page', 1),
             10
         );
-        
-        return $this -> render('UserBundle:User:index.html.twig', array('pagination' => $pagination));
-        
+        //Llamada al formulario de eliminacion AJAX
+        $deleteFormAjax = $this -> createCustomForm(':USER_ID', 'DELETE', 'user_delete');
+        //Llama a la vista index y envia todos los valores.
+        return $this -> render('UserBundle:User:index.html.twig', array('pagination' => $pagination, 'delete_form_ajax' => $deleteFormAjax->createView()));
     }
     
     public function addAction()
@@ -212,19 +213,11 @@ class UserController extends Controller
             throw $this->createNotFoundException($messageException);
         }
         //Crea un formulario de eliminacion
-        $deleteForm = $this->createDeleteForm($user);
+        $deleteForm = $this->createCustomForm($user->getId(), 'DELETE', 'user_delete');
         //Visualiza la vista view y el formulario de eliminacion
         return $this->render('UserBundle:User:view.html.twig', array('user' => $user, 'delete_form' => $deleteForm->createView()));
     }
-    
-    private function createDeleteForm($user)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('user_delete', array('id' => $user->getid())))
-            ->setMethod('DELETE')
-            ->getForm();
-    }
-    
+     
     public function deleteAction(Request $request, $id)
     {
         $em = $this-> getDoctrine()->getManager();
@@ -236,19 +229,67 @@ class UserController extends Controller
             $messageException = $this->get('translator')->trans('User not found.'); 
             throw $this->createNotFoundException($messageException);
         }
-        
-        $form = $this->createDeleteForm($user);
+        //Sacamos total de registros especialmente para AJAX
+        $allUsers = $em->getRepository('UserBundle:User')->findAll();
+        $countUsers = count($allUsers);
+        // $form = $this->createDeleteForm($user);
+        $form = $this -> createCustomForm($user->getId(), 'DELETE', 'user_delete');
         $form -> handleRequest($request);
         //Validamos el envio del formulario
         if($form->isSubmitted() && $form->isValid())
         {
-            $em -> remove($user);
-            $em -> flush();
-        //Envia mensaje   
-            $successMessage = $this->get('translator')->trans('User deleted.');
-            $this->addFlash('mensaje', $successMessage);
+            //Si viene de AJAX
+            if($request->isXMLHttpRequest())
+            {
+            //Creamos un metodo que elimine al usuario (refactored)
+                $res = $this -> deleteUser($user->getRole(), $em, $user);
+            //Retornamos el objeto Response a AJAX
+                return new Response(
+                    json_encode(array('removed' => $res['removed'], 'message' => $res['message'], 'countUsers' => $countUsers)),
+                    //estado de la pagina
+                    200,
+                    //encabezado (formato de envio json)
+                    array('Content-Type' => 'application/json')
+                );
+            }
+        //Llamamos a una funcion que elimina al usuario.
+            $res = $this->deleteUser($user->getRole(), $em, $user);
+        //Devolvemos el mensaje de confirmacion.
+            $this->addFlash($res['alert'],$res['message']);
         //redigir a la vista index mostrando el usuario ya eliminado.
             return $this->redirectToRoute('user_index'); 
         }
+    }
+    private function deleteUser($role, $em, $user)
+    {
+        //elimina solo usuarios tipo USER
+        if($role == 'ROLE_USER')
+        {
+            $em->remove($user);
+            $em->flush();
+            //Envia mensaje de confirmacion, si se elimino el usuario
+            $message = $this->get('translator')->trans('User deleted.');
+            //Indica que fue eliminado.
+            $removed = 1;
+            //Indica el tipo de mensaje, eliminado o no eliminado.
+            $alert = 'mensaje';
+        }//si es de tipo ADMIN
+        elseif($role == 'ROLE_ADMIN')
+        {
+            $message = $this->get('translator')->trans('This kind of user can not be deleted.');
+            $removed = 0;
+            $alert = 'error';
+        }
+        //retorna a la funcion principal con los valoes.
+        return array('removed' => $removed, 'message' => $message, 'alert' => $alert);
+    }
+    //creacion del formulario de eliminacion (replaza a los demas)
+    private function createCustomForm($id, $method, $route)
+    {
+        //creacion del formulario con sus metodos
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl($route, array('id'=>$id)))
+            ->setMethod($method)
+            ->getForm();
     }
 }
