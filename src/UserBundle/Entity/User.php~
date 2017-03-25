@@ -3,16 +3,28 @@
 namespace UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctine\Common\Collections\ArrayCollection;
 
 /**
  * User
  *
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
+ * @UniqueEntity("username")
+ * @UniqueEntity("email")
  * @ORM\HasLifecycleCallbacks()
  */
-class User
+class User implements UserInterface
 {
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
+     */
+    protected $task;
+    
     /**
      * @var integer
      *
@@ -26,6 +38,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=50, nullable=true, unique=true)
+     * @Assert\NotBlank(message="user.username.not_blank")
      */
     private $username;
 
@@ -33,6 +46,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $firstName;
 
@@ -40,6 +54,7 @@ class User
      * @var string
      *
      * @ORM\Column(name="last_name", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $lastName;
 
@@ -47,6 +62,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=100, nullable=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
     
@@ -61,6 +78,8 @@ class User
      * @var string
      *
      * @ORM\Column(name="role", type="string", columnDefinition="ENUM('ROLE_ADMIN', 'ROLE_USER')", length=50)
+     * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"ROLE_ADMIN", "ROLE_USER"})
      */
     private $role;
 
@@ -85,6 +104,11 @@ class User
      */
     private $updatedAt;
 
+    /* Definimos el contructor para la clase Task*/
+    public function __construct()
+    {
+        $this->task = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -302,15 +326,17 @@ class User
         return $this;
     }
 
+
     /**
      * Get updatedAt
      *
      * @return \DateTime
      */
-    public function getUpdateAt()
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
+
 
     /**
      * @ORM\PrePersist
@@ -328,5 +354,20 @@ class User
     {
         $this->updatedAt = new \DateTime();
     }
-}
 
+    
+    public function getRoles()
+    {
+        
+    }
+    
+    public function getSalt()
+    {
+        
+    }
+    
+    public function eraseCredentials()
+    {
+        
+    }
+}

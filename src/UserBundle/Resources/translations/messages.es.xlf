@@ -154,6 +154,18 @@
                 <source>This kind of user can not be deleted.</source>
                 <target>Este tipo de usuario no puede ser eliminado.</target>
             </trans-unit>
+            <trans-unit id="39">
+                <source>Search</source>
+                <target>Buscar</target>
+            </trans-unit>
+            <trans-unit id="40">
+                <source>Search user</source>
+                <target>Buscar Usuario</target>
+            </trans-unit>
+            <trans-unit id="41">
+                <source>No search results</source>
+                <target>No hay resultados de busqueda</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

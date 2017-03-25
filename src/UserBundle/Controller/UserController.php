@@ -14,25 +14,27 @@ class UserController extends Controller
 {
     public function indexAction(Request $request)
     {
-        $em = $this-> getDoctrine() -> getManager();
-        // $users = $em -> getRepository('UserBundle:User') -> findAll();
-        
-        /*
-        $res = 'Lista de Usuarios: </br>';
-        foreach($users as $user)
+        $searchQuery = $request->get('query');
+        //Si hay contenido realizar la busqueda, caso contrario lo mismo.
+        if(!empty($searchQuery))
         {
-            $res .= 'Usuario: ' . $user->getUsername() . ' - Email: ' . $user->getEmail() . '</br>';
+            /* A la fecha no hay compatibilidad con Symfony 3.2 y elasticaBundle
+            //Craga el servicio de elasticasearch
+            $finder = $this -> container->get('fos_elastica.finder.app.user');
+            //Utiliza un metodo especial para adaptar los resultados al paginador
+            $users = $finder ->createPaginatorAdapter($searchQuery);
+            */
         }
-        return new Response($res);
-        */
-        
-        $dql= "SELECT u FROM UserBundle:User u ORDER BY u.id DESC";
-        $users = $em->createQuery($dql);
+        else{
+            $em = $this-> getDoctrine() -> getManager();
+            $dql= "SELECT u FROM UserBundle:User u ORDER BY u.id DESC";
+            $users = $em->createQuery($dql);
+        }
         
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
             $users, $request->query->getInt('page', 1),
-            10
+            5
         );
         //Llamada al formulario de eliminacion AJAX
         $deleteFormAjax = $this -> createCustomForm(':USER_ID', 'DELETE', 'user_delete');
@@ -40,9 +42,13 @@ class UserController extends Controller
         return $this -> render('UserBundle:User:index.html.twig', array('pagination' => $pagination, 'delete_form_ajax' => $deleteFormAjax->createView()));
     }
     
+    
     public function addAction()
     {
+        
         $user = new User();
+        //print('hola');
+        //exit;
         $form = $this->createCreateForm($user);
         
         return $this->render('UserBundle:User:add.html.twig', array('form'=> $form->createView()));
@@ -51,11 +57,12 @@ class UserController extends Controller
     /*Este metodo sirve para estructurar el formulario*/
     private function createCreateForm(User $entity)
     {
+        
         $form = $this->createForm(UserType::class, $entity, array(
                 'action' => $this->generateUrl('user_create'),
                 'method' => 'POST'
             ));
-            
+        
         return $form;
     }
     

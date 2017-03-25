@@ -58,6 +58,8 @@ doctrine:
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
         #path:     "%database_path%"
+        mapping_types:
+            enum: string
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -83,3 +85,6 @@ knp_paginator:
     template:
         pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig     # sliding pagination controls template
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+        
+# Elasticsearch theres no compatibility with symfony 3
+

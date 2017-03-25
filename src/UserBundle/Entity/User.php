@@ -1,11 +1,11 @@
 <?php
 
 namespace UserBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User
@@ -18,6 +18,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class User implements UserInterface
 {
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="user")
+     */ 
+    protected $task;
+    
     /**
      * @var integer
      *
@@ -97,6 +103,11 @@ class User implements UserInterface
      */
     private $updatedAt;
 
+    /* Definimos el contructor para la clase Task*/
+    public function __construct()
+    {
+        $this->task = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -358,4 +369,45 @@ class User implements UserInterface
     {
         
     }
+
+    /**
+     * Add task
+     *
+     * @param \UserBundle\Entity\Task $task
+     *
+     * @return User
+     */
+    public function addTask(\UserBundle\Entity\Task $task)
+    {
+        $this->task[] = $task;
+
+        return $this;
+    }
+
+    /**
+     * Remove task
+     *
+     * @param \UserBundle\Entity\Task $task
+     */
+    public function removeTask(\UserBundle\Entity\Task $task)
+    {
+        $this->task->removeElement($task);
+    }
+
+    /**
+     * Get task
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTask()
+    {
+        return $this->task;
+    }
+    
+    
+    public function getFullName()
+    {
+        return $this->firstName . " " . $this->lastName;
+    }
+    
 }
