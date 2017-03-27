@@ -5,14 +5,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Task
  *
- * @ORM\Table(name="tasks")
- * @ORM\Entity(repositoryClass="UserBundle\Repository\TaskRepository")
+ * @ORM\Table(name="task")
+ * @ORM\Entity(repositoryClass="UserBundle\Entity\TaskRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Task
 {
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="task")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      */ 
     protected $user;
@@ -50,13 +50,13 @@ class Task
      *
      * @ORM\Column(name="created_at", type="datetime")
      */
-    private $createdAt;
+    private $createAt;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime")
      */
-    private $updatedAt;
+    private $updateAt;
     /**
      * Get id
      *
@@ -127,59 +127,59 @@ class Task
         return $this->status;
     }
     /**
-     * Set createdAt
+     * Set createAt
      *
-     * @param \DateTime $createdAt
+     * @param \DateTime $createAt
      * @return Task
      */
-    public function setCreatedAt($createdAt)
+    public function setCreateAt($createAt)
     {
-        $this->createdAt = $createdAt;
+        $this->createAt = $createAt;
         return $this;
     }
     /**
-     * Get createdAt
+     * Get createAt
      *
      * @return \DateTime 
      */
-    public function getCreatedAt()
+    public function getCreateAt()
     {
-        return $this->createdAt;
+        return $this->createAt;
     }
     /**
-     * Set updatedAt
+     * Set updateAt
      *
-     * @param \DateTime $updatedAt
+     * @param \DateTime $updateAt
      * @return Task
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdateAt($updateAt)
     {
-        $this->updatedAt = $updatedAt;
+        $this->updateAt = $updateAt;
         return $this;
     }
     /**
-     * Get updatedAt
+     * Get updateAt
      *
      * @return \DateTime 
      */
-    public function getUpdatedAt()
+    public function getUpdateAt()
     {
-        return $this->updatedAt;
+        return $this->updateAt;
     }
     /**
      * @ORM\PrePersist
      */
-    public function setCreatedAtValue()
+    public function setCreateAtValue()
     {
-        $this->createdAt = new \DateTime();
+        $this->createAt = new \DateTime();
     }
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function setUpdatedAtValue()
+    public function setUpdateAtValue()
     {
-        $this->updatedAt = new \DateTime();
+        $this->updateAt = new \DateTime();
     }
     /**
      * Set user

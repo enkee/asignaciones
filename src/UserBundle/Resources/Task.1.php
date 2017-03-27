@@ -1,200 +1,168 @@
 <?php
-
 namespace UserBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * Task
  *
  * @ORM\Table(name="task")
- * @ORM\Entity(repositoryClass="UserBundle\Repository\TaskRepository")
+ * @ORM\Entity(repositoryClass="UserBundle\Entity\TaskRepository")
  * @ORM\HasLifecycleCallbacks()
  */
 class Task
 {
-    
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="tasks")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="task")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+     */ 
     protected $user;
     
     /**
-     * @var int
+     * @var integer
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=100)
      */
     private $title;
-
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text")
      */
     private $description;
-
     /**
-     * @var bool
+     * @var boolean
      *
      * @ORM\Column(name="status", type="boolean")
      */
     private $status;
-
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="createAt", type="datetime")
      */
-    private $createAt;
-
+    private $createdAt;
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="updateAt", type="datetime")
      */
-    private $updateAt;
-
-
+    private $updatedAt;
     /**
      * Get id
      *
-     * @return int
+     * @return integer 
      */
     public function getId()
     {
         return $this->id;
     }
-
     /**
      * Set title
      *
      * @param string $title
-     *
      * @return Task
      */
     public function setTitle($title)
     {
         $this->title = $title;
-
         return $this;
     }
-
     /**
      * Get title
      *
-     * @return string
+     * @return string 
      */
     public function getTitle()
     {
         return $this->title;
     }
-
     /**
      * Set description
      *
      * @param string $description
-     *
      * @return Task
      */
     public function setDescription($description)
     {
         $this->description = $description;
-
         return $this;
     }
-
     /**
      * Get description
      *
-     * @return string
+     * @return string 
      */
     public function getDescription()
     {
         return $this->description;
     }
-
     /**
      * Set status
      *
      * @param boolean $status
-     *
      * @return Task
      */
     public function setStatus($status)
     {
         $this->status = $status;
-
         return $this;
     }
-
     /**
      * Get status
      *
-     * @return bool
+     * @return boolean 
      */
     public function getStatus()
     {
         return $this->status;
     }
-
     /**
-     * Set createAt
+     * Set createdAt
      *
-     * @param \DateTime $createAt
-     *
+     * @param \DateTime $createdAt
      * @return Task
      */
-    public function setCreateAt($createAt)
+    public function setCreatedAt($createdAt)
     {
-        $this->createAt = $createAt;
-
+        $this->createdAt = $createdAt;
         return $this;
     }
-
     /**
-     * Get createAt
+     * Get createdAt
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
-    public function getCreateAt()
+    public function getCreatedAt()
     {
-        return $this->createAt;
+        return $this->createdAt;
     }
-
     /**
-     * Set updateAt
+     * Set updatedAt
      *
-     * @param \DateTime $updateAt
-     *
+     * @param \DateTime $updatedAt
      * @return Task
      */
-    public function setUpdateAt($updateAt)
+    public function setUpdatedAt($updatedAt)
     {
-        $this->updateAt = $updateAt;
-
+        $this->updatedAt = $updatedAt;
         return $this;
     }
-
     /**
-     * Get updateAt
+     * Get updatedAt
      *
-     * @return \DateTime
+     * @return \DateTime 
      */
-    public function getUpdateAt()
+    public function getUpdatedAt()
     {
-        return $this->updateAt;
+        return $this->updatedAt;
     }
-
     /**
      * @ORM\PrePersist
      */
@@ -202,34 +170,29 @@ class Task
     {
         $this->createdAt = new \DateTime();
     }
-    
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-     public function setUpdatedAtValue()
+    public function setUpdatedAtValue()
     {
         $this->updatedAt = new \DateTime();
     }
-
     /**
      * Set user
      *
      * @param \UserBundle\Entity\User $user
-     *
      * @return Task
      */
     public function setUser(\UserBundle\Entity\User $user = null)
     {
         $this->user = $user;
-
         return $this;
     }
-
     /**
      * Get user
      *
-     * @return \UserBundle\Entity\User
+     * @return \UserBundle\Entity\User 
      */
     public function getUser()
     {
