@@ -12,6 +12,12 @@ use UserBundle\Form\UserType;
 
 class UserController extends Controller
 {
+    public function homeAction()
+    {
+        //Redirigimos a nuestra vista home.
+        return $this->render('UserBundle:User:home.html.twig');
+    }
+    
     public function indexAction(Request $request)
     {
         $searchQuery = $request->get('query');

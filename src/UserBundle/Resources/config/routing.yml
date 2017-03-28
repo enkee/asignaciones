@@ -5,3 +5,20 @@ user_user:
 task_task:
     resource: "@UserBundle/Resources/config/routes/task.yml"
     prefix: /task
+    
+# Autentication
+
+user_homepage:
+    path:     /
+    defaults: { _controller: UserBundle:User:home }
+
+user_login:
+    path:     /login
+    defaults: { _controller: UserBundle:Security:login }
+
+user_login_check:
+    path:     /login_check
+    defaults: { _controller: UserBundle:Security:loginCheck }
+
+user_logout:
+    path:   /logout
