@@ -47,6 +47,7 @@
 	            <br>
 	        </dl>
 	    </div>
+	    {% if is_granted('ROLE_ADMIN') %}
 	    <div class="col-md-3">
 	        <h3>Actions:</h3>
 	        <p>
@@ -59,5 +60,6 @@
 	            {{ include('UserBundle:Task:forms/form.html.twig', { form: delete_form, message: 'Are you sure ?' }) }}
 	        </p>
 	    </div>
+	    {% endif %}
 	</div>
 {% endblock %}

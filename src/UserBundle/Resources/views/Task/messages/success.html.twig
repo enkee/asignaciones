@@ -1,4 +1,13 @@
 {# Esta plantilla es reutilizada por controladores y AJAX #}
+{# Si no exite flashMessage (AJAX) #}
+{% if flashMessage is not defined %}
+    <div class="alert alert-success hidden" id="message" role="alert">
+        <div class="container">
+            <spam id="user-message"></spam>
+        </div>
+    </div>
+{% endif %}
+
 
 {% for flashMessage in app.session.flashbag.get('mensaje') %}
 	<div class="alert alert-success" role="alert">

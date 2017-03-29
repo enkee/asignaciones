@@ -26,6 +26,73 @@ class TaskController extends Controller
         return $this->render('UserBundle:Task:index.html.twig', array('pagination' => $pagination));
     }
     
+    public function customAction(Request $request)
+    {
+        //Recuperamos el id del usuario logeado, con el servicio de seguridad
+        $idUser = $this->get('security.token_storage')->getToken()->getUser()->getId();
+        //Recuperamos las tareas del usuario logeado, con dql doctrine.
+        $em = $this->getDoctrine()->getManager();
+        $dql = "SELECT t FROM UserBundle:Task t JOIN t.user u WHERE u.id = :idUser ORDER BY t.id DESC";
+        $tasks = $em->createQuery($dql)->setParameter('idUser', $idUser);
+        //Paginamos las tareas del usuario autenticado.
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $tasks,
+            $request->query->getInt('page', 1),
+            3
+        );
+        //Creamos un formulario para procesar la tarea
+        $updateForm = $this->createCustomForm(':TASK_ID', 'PUT', 'task_process');
+        
+        return $this->render('UserBundle:Task:custom.html.twig', array('pagination' => $pagination, 'update_form' => $updateForm->createView()));
+    }
+    
+    public function processAction($id, Request $request)
+    {
+        $em =  $this->getDoctrine()->getManager();
+        
+        $task = $em->getRepository('UserBundle:Task')->find($id);
+        
+        if(!$task)
+        {
+            throw $this->createNotFoundException('The task not exist.');
+        }
+        //Armamos un nuevo formulario con los valores devueltos por el primer formulario 
+        $form = $this->createCustomForm($task->getId(), 'PUT', 'task_process');
+        $form->handleRequest($request);
+        // si el formulario y valores no tuvo problemas para completarse entonces
+        if($form->isSubmitted() && $form->isValid())
+        {
+            // se cambia el varlor de Status y se procesa en la base de datos
+            if($task->getStatus()  == 0)
+            {
+                $task->setStatus(1);
+                $em->flush();
+                //Respondemos al metodo AJAX con formato json
+                if($request->isXMLHttpRequest())
+                {
+                    return new Response(
+                        json_encode(array('processed' => 1)),
+                        200,
+                        array('Content-Type' => 'application/json')
+                    );
+                }
+            }
+            // en caso la tarea ya hubiese sido procesada
+            else
+            {
+                if($request->isXMLHttpRequest())
+                {
+                    return new Response(
+                        json_encode(array('processed' => 0)),
+                        200,
+                        array('Content-Type' => 'application/json')
+                    );
+                }
+            }
+        }
+    }
+    
     public function addAction()
     {
         $task = new Task();

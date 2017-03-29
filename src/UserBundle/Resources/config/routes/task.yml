@@ -35,6 +35,15 @@ task_redirect_add:
         _controller: UserBundle:Task:add
         path: /add
         permanent: true
+        
+task_custom:
+    path:     /custom
+    defaults: { _controller: UserBundle:Task:custom }
+
+task_process:
+    path:     /process/{id}
+    defaults: { _controller: UserBundle:Task:process }
+    methods: [POST, PUT]
 
 task_redirect_edit:
     path: /update/{id}
